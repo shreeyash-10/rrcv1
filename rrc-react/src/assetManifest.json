@@ -1,0 +1,375 @@
+{
+  "about us 2_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "about us_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style-content.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "advisors_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "book about us _files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "book for ram_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "book.com_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "events_files": {
+    "css": [
+      "all.min.css",
+      "bootstrap.min.css",
+      "css2",
+      "css2(1)",
+      "slick-theme.css",
+      "slick.css",
+      "style-content.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "gallery video_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "gallery.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "letter to modi_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "mahakumbh_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "message _files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "president.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "other team_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "our team main_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "our work for sita_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "press_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style-content.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "print gallery_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style-content.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "print media coverage _files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style-content.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "ramayan manch _files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  },
+  "sant mandal_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "sita samiti_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "state team_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "our-team.css",
+      "slick-theme.css",
+      "slick.css",
+      "style.css"
+    ],
+    "js": [
+      "jquery-3.6.0.min.js",
+      "slick.min.js"
+    ]
+  },
+  "रामायण रिसर्च काउंसिल_files": {
+    "css": [
+      "bootstrap.min.css",
+      "css2",
+      "slick-theme.css",
+      "slick.css",
+      "style.css",
+      "www-player.css"
+    ],
+    "js": [
+      "9bXBegwkXqu77ttg1H2zNptqxcGE6xDjLfnManLdL_4.js",
+      "ad_status.js",
+      "base.js",
+      "cast_sender(1).js",
+      "cast_sender.js",
+      "embed.js",
+      "jquery-3.6.0.min.js",
+      "remote.js",
+      "slick.min.js",
+      "www-embed-player.js"
+    ]
+  }
+}

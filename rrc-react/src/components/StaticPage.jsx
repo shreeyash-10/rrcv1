@@ -3,6 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { resolveRoute } from '../linkResolver';
 import usePageAssets from '../hooks/usePageAssets';
 
+const ensureBlogLink = (list) => {
+  if (!list) return;
+  const hasBlog = Array.from(list.querySelectorAll('a')).some(
+    (a) => a.textContent.trim().toLowerCase() === 'blogs'
+  );
+  if (hasBlog) return;
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  a.href = '/blogs';
+  a.textContent = 'Blogs';
+  li.appendChild(a);
+  list.appendChild(li);
+};
+
 const wireInteractions = (container) => {
   const cleanups = [];
   if (!container) return () => {};
@@ -98,6 +112,27 @@ export default function StaticPage({ html, assetDir, title, manifest }) {
 
     const teardown = wireInteractions(container);
     cleanups.push(teardown);
+
+    const navLists = container.querySelectorAll('.nav_logo > ul');
+    if (navLists.length) {
+      ensureBlogLink(navLists[navLists.length - 1]);
+      navLists.forEach((ul, idx) => {
+        if (idx < navLists.length - 1) {
+          ul.querySelectorAll('a').forEach((a) => {
+            if (a.textContent.trim().toLowerCase() === 'blogs') {
+              a.closest('li')?.remove();
+            }
+          });
+        }
+      });
+    }
+
+    const topBar = container.querySelector('.top_bar .courtesy_bar');
+    const socials = container.querySelector('.header_bar .header_social');
+    if (topBar && socials) {
+      topBar.appendChild(socials);
+      socials.classList.add('top-socials');
+    }
 
     return () => {
       cleanups.forEach((fn) => fn && fn());

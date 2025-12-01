@@ -25,6 +25,8 @@ const coreFileToRoute = {
   'president.html': '/message',
   'message .html': '/message',
   'letter to modi.html': '/letter-to-modi',
+  'blog.html': '/blogs',
+  'blogs.html': '/blogs',
   'teammember.html': '/our-team',
   'our team main.html': '/our-team',
   'sitasakhisamethi.html': '/sita-samiti',

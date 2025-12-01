@@ -22,6 +22,7 @@ import stateTeam from './content/state-team.html?raw';
 import advisors from './content/advisors.html?raw';
 import letterToModi from './content/letter-to-modi.html?raw';
 import message from './content/message.html?raw';
+import blogs from './content/blogs.html?raw';
 
 export const pages = [
   { path: '/', slug: 'home', title: 'रामायण रिसर्च काउंसिल', html: home, assetDir: 'रामायण रिसर्च काउंसिल_files' },
@@ -46,6 +47,7 @@ export const pages = [
   { path: '/advisors', slug: 'advisors', title: 'Advisors', html: advisors, assetDir: 'advisors_files' },
   { path: '/letter-to-modi', slug: 'letter-to-modi', title: 'Letter To Modi', html: letterToModi, assetDir: 'letter to modi_files' },
   { path: '/message', slug: 'message', title: 'Message', html: message, assetDir: 'message _files' },
+  { path: '/blogs', slug: 'blogs', title: 'Blogs', html: blogs, assetDir: 'about us_files' },
 ];
 
 export { manifest };

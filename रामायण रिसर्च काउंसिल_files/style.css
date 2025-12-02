@@ -1,7 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;500;600&display=swap");
+
 * {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins", "Hind", sans-serif;
+}
+
+body {
+  background: #fdf7f0;
+  color: #2b1a1a;
 }
 
 .container {
@@ -1806,3 +1813,56 @@ img {
   }
 }
 
+/* Modern UI overrides */
+header {
+  background: linear-gradient(90deg, #5a263d, #7a3044);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 8px 20px rgba(73, 38, 61, 0.2);
+}
+.top_bar { background: #3a1a2d; padding: 6px 0; }
+header .top_bar .courtesy_bar { font-size: 13px; line-height: 18px; justify-content: space-between; gap: 12px; color: #ffe5d4; }
+header .top_bar .courtesy_bar .top_contact { gap: 12px; flex-wrap: wrap; }
+header .top_bar .courtesy_bar a { color: #ffe5d4; }
+header .header_container .header_bar { padding: 12px 0; }
+header .header_container .header_bar .nav_logo ul li a { color: #ffe5d4; font-size: 18px; }
+header .header_container .header_bar .nav_logo ul li a:hover { color: #ffd0a8; }
+header .header_container .header_bar .nav_logo .logo { padding: 0 16px; }
+header .header_container .header_bar .join_rcc a { display: inline-flex; background: linear-gradient(90deg, #db4242, #f27f2d); color: #fff; padding: 10px 26px; border-radius: 999px; box-shadow: 0 6px 16px rgba(219, 66, 66, 0.25); }
+
+.banner_area { position: relative; overflow: hidden; }
+.banner_area .banner_slider img { height: 60vh; object-fit: cover; filter: brightness(0.72); }
+.hero_copy { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.hero_copy .hero_inner { max-width: 760px; text-align: center; color: #fff; padding: 0 20px; }
+.hero_copy h1 { font-size: 42px; line-height: 1.2; margin-bottom: 12px; text-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+.hero_copy p { font-size: 18px; color: #ffe7da; margin-bottom: 16px; }
+.hero_cta { display: inline-flex; pointer-events: auto; background: linear-gradient(90deg, #db4242, #f27f2d); color: #fff; padding: 12px 28px; border-radius: 999px; font-weight: 700; box-shadow: 0 8px 22px rgba(240, 108, 53, 0.35); text-decoration: none; }
+
+.body-container { background: #fdf7f0; }
+.about_us_section .devotional_items ul { gap: 18px; }
+.about_us_section .devotional_items ul li { background: #fff; border: 1px solid #f2e4dc; box-shadow: 0 10px 30px rgba(73, 38, 61, 0.12); padding: 28px 24px; border-radius: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.about_us_section .devotional_items ul li:hover { transform: translateY(-6px); box-shadow: 0 16px 38px rgba(73, 38, 61, 0.18); }
+.about_us_section .devotional_items ul li h3 { font-size: 26px; line-height: 32px; }
+.about_us_section .devotional_items ul li p { font-size: 15px; line-height: 26px; }
+.about_us_section .devotional_items ul li img { max-width: 80px; margin-bottom: 16px; }
+
+.about_us_section .about_us_info_section { padding: 90px 24px; gap: 40px; }
+.about_us_section .about_us_info_section .two_equal_col { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 12px 30px rgba(73, 38, 61, 0.08); border: 1px solid #f2e4dc; }
+.about_us_section .about_us_info_section .two_equal_col .related_gallery img { border-radius: 12px; }
+.about_us_section .about_us_info_section .two_equal_col .heading { color: #49263d; }
+.about_us_section .about_us_info_section .two_equal_col .topics li { padding: 0 0 20px 60px; }
+
+.guidance_section { background: #f7f0e8; padding: 90px 0; }
+.guidance_section .guidance_section_slider .two-col-left, .guidance_section .guidance_section_slider .two-col-right { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 10px 28px rgba(73, 38, 61, 0.1); border: 1px solid #f2e4dc; }
+
+.testimonials_wrapper .testimonials_items { background: #fff; border-radius: 14px !important; box-shadow: 0 10px 26px rgba(73, 38, 61, 0.1); border: 1px solid #f2e4dc; padding: 18px; }
+
+footer.footer_section { background: #3a1a2d; color: #ffe5d4; }
+footer.footer_section a { color: #ffe5d4; text-decoration: none; }
+
+@media (max-width: 900px) {
+  .banner_area .banner_slider img { height: 46vh; }
+  .hero_copy h1 { font-size: 32px; }
+  .about_us_section .devotional_items ul li { width: 100%; }
+}

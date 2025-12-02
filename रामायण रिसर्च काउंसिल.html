@@ -228,6 +228,13 @@
                 
             <button class="slick-next slick-arrow" aria-label="Next" type="button" style="">Next</button></ul>
         </div>
+        <div class="hero_copy">
+            <div class="hero_inner">
+                <h1>रामायण रिसर्च काउंसिल</h1>
+                <p>सनातन संस्कृति, शोध, और सेवा को समर्पित—ज्ञान और आस्था का विश्वसनीय स्रोत।</p>
+                <a href="https://rammandirbook.com/about-us.html" class="hero_cta">और जानें</a>
+            </div>
+        </div>
     </div>
 
 
@@ -946,6 +953,12 @@
                     ]
                 }
             );
+
+            // Lazy-load images except the first hero image
+            $('img').each(function (idx) {
+                if (idx === 0) return;
+                $(this).attr('loading', 'lazy');
+            });
 
         });
     </script>

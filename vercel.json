@@ -1,8 +1,8 @@
 {
   "framework": null,
-  "outputDirectory": ".",
+  "buildCommand": "cd rrc-react && npm install && npm run build",
+  "outputDirectory": "rrc-react/dist",
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/$1" }
   ]
 }

@@ -42,9 +42,12 @@ img {
 
 .page-shell {
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 10%, rgba(197, 82, 47, 0.08), transparent 30%),
+  background:
+    linear-gradient(180deg, rgba(232, 111, 59, 0.22), rgba(244, 203, 165, 0.12) 24%, rgba(247, 240, 231, 0.9) 42%),
+    radial-gradient(circle at 20% 10%, rgba(197, 82, 47, 0.08), transparent 30%),
     radial-gradient(circle at 80% 30%, rgba(75, 79, 54, 0.08), transparent 26%),
     var(--bg);
+  background-attachment: fixed, fixed, fixed, scroll;
   padding-bottom: 64px;
 }
 
@@ -82,7 +85,7 @@ header .container-fluid {
 }
 
 header .top_bar {
-  background: var(--accent);
+  background: linear-gradient(120deg, #e86f3b, #d5582f, #e86f3b);
   color: #fff;
   font-weight: 600;
   padding: 6px 0;
@@ -326,6 +329,8 @@ section,
 .hero_section,
 .main-banner {
   background: linear-gradient(135deg, #fff6ec, #f0e1d3);
+  background-attachment: fixed;
+  background-position: center calc(-40px - var(--parallax-offset, 0px));
   border: 1px solid var(--outline);
   border-radius: 24px;
   padding: 34px 28px;
@@ -390,6 +395,42 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Layout fixes for home content */
+.about_us_info_section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.related_gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.related_gallery img {
+  width: 100%;
+  max-width: 260px;
+  max-height: 260px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.about_us_video_section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.about_us_video_section iframe {
+  width: 100%;
+  min-height: 220px;
+  border: none;
+  border-radius: 14px;
 }
 
 .card h3,

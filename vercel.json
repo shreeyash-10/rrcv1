@@ -3,6 +3,6 @@
   "buildCommand": "cd rrc-react && npm install && npm run build",
   "outputDirectory": "rrc-react/dist",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

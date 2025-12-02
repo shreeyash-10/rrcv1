@@ -92,6 +92,16 @@ export default function StaticPage({ html, assetDir, title, manifest }) {
   }, [html, title]);
 
   useEffect(() => {
+    const updateParallax = () => {
+      const offset = window.scrollY * 0.2;
+      document.documentElement.style.setProperty('--parallax-offset', `${offset}px`);
+    };
+    updateParallax();
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    return () => window.removeEventListener('scroll', updateParallax);
+  }, []);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return () => {};
     const cleanups = [];

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Blogs | Ramayan Research Council</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="./book about us _files/css2" rel="stylesheet">
+    <link href="./book about us _files/bootstrap.min.css" rel="stylesheet">
+    <link href="./book about us _files/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./book about us _files/slick.css">
+    <link rel="stylesheet" type="text/css" href="./book about us _files/slick-theme.css">
+    <script src="./book about us _files/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="./book about us _files/slick.min.js"></script>
+    <style>
+      /* Blog page styling (lightweight, matches theme) */
+      .blog-hero {
+        background: linear-gradient(180deg, #49263d 17.31%, #8b4e5d 100%);
+        color: #fff;
+        padding: 40px 0 70px;
+        text-align: left;
+      }
+      .blog-hero .hero-inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .blog-hero h1 {
+        font-size: 34px;
+        margin: 0 0 8px;
+        font-weight: 800;
+      }
+      .blog-hero p {
+        margin: 0;
+        color: #ffe7da;
+        font-size: 16px;
+      }
+      .blog-follow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+      .blogs-wrapper {
+        max-width: 1180px;
+        margin: -40px auto 60px;
+        padding: 0 20px;
+      }
+      .blogs-panel {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 18px 32px rgba(18, 43, 76, 0.08);
+        padding: 16px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 14px;
+      }
+      .blog-feature {
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+      }
+      .blog-feature img { width: 100%; height: 340px; object-fit: cover; display: block; }
+      .blog-feature .body { padding: 16px 18px 18px; background: #fff; }
+      .blog-feature h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.3; color: #49263d; }
+      .blog-meta { color: #777; font-size: 14px; margin: 0 0 10px; }
+      .blog-sidebar { display: flex; flex-direction: column; gap: 12px; }
+      .mini-card {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 12px;
+        padding: 10px;
+        border: 1px solid #e6e6e6;
+        border-radius: 10px;
+        background: #fff;
+      }
+      .mini-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 8px; }
+      .mini-card h4 { margin: 0 0 6px; font-size: 15px; line-height: 1.4; color: #49263d; }
+      .mini-card .blog-meta { margin: 0; font-size: 13px; }
+      .latest {
+        margin-top: 24px;
+      }
+      .latest h3 { margin: 0 0 12px; font-size: 18px; color: #49263d; }
+      .latest-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+      }
+      .latest-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e6e6e6;
+        padding: 12px;
+        display: flex;
+        gap: 12px;
+      }
+      .latest-card img { width: 96px; height: 96px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+      .latest-card h4 { margin: 0 0 6px; font-size: 15px; color: #49263d; }
+      .latest-card .blog-meta { margin: 0; font-size: 13px; }
+      .section-title { margin: 28px 0 12px; font-weight: 700; font-size: 18px; color: #49263d; }
+      /* Admin area */
+      .admin { margin-top: 32px; display: grid; gap: 12px; }
+      .admin-card {
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .admin-card h4 { margin: 0 0 10px; color: #49263d; }
+      .admin input, .admin textarea {
+        width: 100%; padding: 10px; border: 1px solid #e6e6e6; border-radius: 8px; font-family: inherit;
+      }
+      .admin label { font-weight: 600; font-size: 13px; display: block; margin: 0 0 4px; color: #49263d; }
+      .admin .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 10px; }
+      .admin button {
+        background: #db4242; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 700; cursor: pointer;
+      }
+      .ghost-btn { background: #f2f2f2; color: #333; border: 1px solid #e6e6e6; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+      .badge { display: inline-flex; align-items: center; gap: 6px; background: #f5f5f5; padding: 6px 8px; border-radius: 8px; border: 1px solid #e6e6e6; font-size: 12px; }
+      .blog-list { display: grid; gap: 8px; }
+      .blog-item { border: 1px solid #e6e6e6; border-radius: 10px; padding: 10px; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+      .blog-actions { display: flex; gap: 6px; }
+      .hidden { display: none; }
+      @media (max-width: 900px) {
+        .blogs-panel { grid-template-columns: 1fr; }
+        .blog-feature img { height: 240px; }
+        .mini-card { grid-template-columns: 100px 1fr; }
+      }
+      @media (max-width: 640px) {
+        .blog-hero { padding: 32px 0 44px; }
+        .blog-hero .hero-inner { flex-direction: column; align-items: flex-start; }
+        .blog-feature img { height: 200px; }
+        .latest-card { flex-direction: column; }
+        .latest-card img { width: 100%; height: 160px; }
+      }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container-fluid">
+            <div class="row top_bar hidden_mobile">
+                <div class="container">
+                    <div class="courtesy_bar">
+                        <div class="top_contact">
+                            <div class="site_mail"><a href="mailto:info@ramayanparivar.com">info@ramayanparivar.com</a></div>
+                            <div class="site_contact_number">+91-8368320801 <span>|</span> +91-8130767023</div>
+                        </div>
+                        <div class="header_social top_social">
+                            <ul>
+                                <li><a href="https://www.facebook.com/RamayanResearchCouncil/" class="facebook" aria-label="Facebook" title="Facebook">facebook</a></li>
+                                <li><a href="https://x.com/RamayanResearch" class="xtwitter" aria-label="X (Twitter)" title="X (Twitter)">xtwitter</a></li>
+                                <li><a href="https://www.instagram.com/ramayanresearchcouncil/" class="instagram" aria-label="Instagram" title="Instagram">instagram</a></li>
+                                <li><a href="https://www.youtube.com/@ramayanresearchcouncil" class="youtube" aria-label="YouTube" title="YouTube">youtube</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header_container">
+                <div class="container">
+                    <div class="header_bar">
+                        <div class="header_social hidden_mobile">
+                            <ul>
+                                <li><a href="https://www.facebook.com/RamayanResearchCouncil/" class="facebook">facebook</a></li>
+                                <li><a href="https://x.com/RamayanResearch" class="xtwitter">xtwitter</a></li>
+                                <li><a href="https://www.instagram.com/ramayanresearchcouncil/" class="instagram">instagram</a></li>
+                                <li><a href="https://www.youtube.com/@ramayanresearchcouncil" class="youtube">youtube</a></li>
+                            </ul>
+                        </div>
+                         <div class="nav_logo">
+                            <ul class="hidden_mobile">
+                                <li><a href="#">हमारे बारे में</a>
+                                    <ul>
+                                        <li><a href="https://rammandirbook.com/about-us.html">श्रीरामलला ग्रंथ</a></li>
+                                        <li><a href="https://rammandirbook.com/about-us-copy.html">काउंसिल के बारे में</a></li>
+                                        <li><a href="https://rammandirbook.com/our-aim.html">काउंसिल के उद्देश्य</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://rammandirbook.com/teamMember.html">हमारी टीम</a> 
+                                        <ul>
+                                            <li><a href="https://rammandirbook.com/teamMember.html">टीम के सदस्य</a></li>
+                                            <li><a href="https://rammandirbook.com/sitaSakhiSamethi.html">सीता सखी समिति</a></li>
+                                            <li><a href="https://rammandirbook.com/santSanrakshakMandal.html">संत-संरक्षक मण्डल</a></li>
+                                            <li><a href="https://rammandirbook.com/reaserchersTeam.html">शोधार्थियों की टीम</a></li>
+                                            <li><a href="https://rammandirbook.com/stateTeam.html">राज्यों की टीम</a></li>
+                                            <li><a href="https://rammandirbook.com/advisorteam.html">हमारे सलाहकार</a></li>
+                                        </ul></li>
+                                <li><a href="https://rammandirbook.com/emptyPage.html">हमारे कार्य</a>
+                                <ul>
+                                        <li><a href="https://maasita.com/">मां सीताजी के लिए</a></li>
+                                        <li><a href="https://rammandirbook.com/">श्रीराम-मंदिर संघर्ष पर आधारित ग्रंथ</a></li>
+                                        <li><a href="https://ramayanvarta.com/">रामायण वार्ता</a></li>
+                                        <li><a href="https://ramayanmanch.com/">रामायण-मंच</a></li>
+                                        <li><a href="https://alettertonarendramodi.com/">ए लेटर टू नरेंद्र मोदी</a></li>
+                                        <li><a href="https://mahakumbhinfo.com/">महाकुंभ</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <div class="logo">
+                                <a href="https://rammandirbook.com/index.html"><img src="./book about us _files/logo.png" alt="Ramaynmanch"></a>
+                            </div>
+                            <ul class="hidden_mobile">
+                                <li><a href="#">मीडिया</a>
+                                <ul>
+                                        <li><a href="https://rammandirbook.com/events.html">इवेंट्स</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">प्रेस रिलीज</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">वेब मीडिया कवरेज</a></li>
+                                        <li><a href="https://rammandirbook.com/printgallery.html">प्रिंट मीडिया कवरेज</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">टीवी मीडिया कवरेज</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://rammandirbook.com/photoGallery.html">गैलरी</a>
+                                <ul>
+                                        <li><a href="https://rammandirbook.com/videoGallery.html">वीडियो गैलरी</a></li>
+                                        <li><a href="https://rammandirbook.com/photoGallery.html">मीडिया गैलरी</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://rammandirbook.com/president.html">संदेश</a>
+                                 <ul>
+                                        <li><a href="https://rammandirbook.com/president.html">अध्यक्ष</a></li>
+                                    </ul>
+                                </li>
+                        </ul></div>
+                        <div class="join_rcc hidden_mobile"><a href="#">Join RRC</a></div>
+                    </div>
+                    <div class="header_mobile_navbar hidden-desktop">
+                        <div class="top_barNav">
+                            <div class="menu_open">open</div>
+                            <div class="nav_slidebar">
+                                <ul class="menu_bar">
+                                    <li>
+                                        <a href="https://rammandirbook.com/about-us-copy.html">हमारे बारे में</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                            <li><a href="https://rammandirbook.com/about-us.html">श्रीरामलला ग्रंथ</a></li>
+                                            <li><a href="https://rammandirbook.com/about-us-copy.html">काउंसिल के बारे में</a></li>
+                                            <li><a href="https://rammandirbook.com/our-aim.html">काउंसिल के उद्देश्य</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="https://rammandirbook.com/teamMember.html">हमारी टीम</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                            <li><a href="https://rammandirbook.com/teamMember.html">टीम के सदस्य</a></li>
+                                            <li><a href="https://rammandirbook.com/sitaSakhiSamethi.html">सीता सखी समिति</a></li>
+                                            <li><a href="https://rammandirbook.com/santSanrakshakMandal.html">संत-संरक्षक मण्डल</a></li>
+                                            <li><a href="https://rammandirbook.com/reaserchersTeam.html">शोधार्थियों की टीम</a></li>
+                                            <li><a href="https://rammandirbook.com/stateTeam.html">राज्यों की टीम</a></li>
+                                            <li><a href="https://rammandirbook.com/advisorteam.html">हमारे सलाहकार</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="https://rammandirbook.com/emptyPage.html">हमारे कार्य</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                        <li><a href="https://maasita.com/">मां सीताजी के लिए</a></li>
+                                        <li><a href="https://rammandirbook.com/emptyPage.html">श्रीराम-मंदिर संघर्ष पर आधारित ग्रंथ</a></li>
+                                        <li><a href="https://rammandirbook.com/emptyPage.html">रामायण वार्ता</a></li>
+                                        <li><a href="https://rammandirbook.com/emptyPage.html">रामायण-मंच</a></li>
+                                        <li><a href="https://rammandirbook.com/emptyPage.html">ए लेटर टू नरेंद्र मोदी</a></li>
+                                        <li><a href="https://rammandirbook.com/emptyPage.html">महाकुंभ</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                        <a href="https://rammandirbook.com/about-us.html">मीडिया</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                        <li><a href="https://rammandirbook.com/events.html">इवेंट्स</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">प्रेस रिलीज</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">वेब मीडिया कवरेज</a></li>
+                                        <li><a href="https://rammandirbook.com/printgallery.html">प्रिंट मीडिया कवरेज</a></li>
+                                        <li><a href="https://rammandirbook.com/press.html">टीवी मीडिया कवरेज</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                        <a href="https://rammandirbook.com/photoGallery.html">गैलरी</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                        <li><a href="https://rammandirbook.com/videoGallery.html">वीडियो गैलरी</a></li>
+                                        <li><a href="https://rammandirbook.com/photoGallery.html">मीडिया गैलरी</a></li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                        <a href="https://rammandirbook.com/president.html">संदेश</a><span class="dropdown_arrow"></span>
+                                        <ul>
+                                        <li><a href="https://rammandirbook.com/president.html">अध्यक्ष</a></li>
+                                    </ul>
+                                    </li>
+                                </ul>
+                                <div class="courtesy_bar">
+                                    <div class="site_mail"><a href="mailto:info@ramayanmanch.com">info@ramayanmanch.com</a></div>
+                                    <div class="site_contact_number">+011 43502153 <span>|</span> +91-8527398595</div>
+                                </div>
+                                <div class="header_social">
+                                    <ul>
+                                        <li><a href="https://www.facebook.com/RamayanResearchCouncil/" class="facebook">facebook</a></li>
+                                <li><a href="https://x.com/RamayanResearch" class="xtwitter">xtwitter</a></li>
+                                <li><a href="https://www.instagram.com/ramayanresearchcouncil/" class="instagram">instagram</a></li>
+                                <li><a href="https://www.youtube.com/@ramayanresearchcouncil" class="youtube">youtube</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="blog-hero">
+      <div class="hero-inner">
+        <div>
+          <h1>Blogs</h1>
+          <p>नवीनतम शोध, उत्पाद अपडेट, और उद्योग अंतर्दृष्टि।</p>
+        </div>
+        <div class="blog-follow">Follow: <span aria-hidden="true">🔔</span></div>
+      </div>
+    </section>
+
+    <main class="blogs-wrapper">
+      <div class="blogs-panel" id="featurePanel">
+        <div class="blog-feature">
+          <img id="featureImg" src="./book.com_files/slider-1.png" alt="">
+          <div class="body">
+            <div class="blog-meta" id="featureMeta">—</div>
+            <h2 id="featureTitle">—</h2>
+            <p id="featureExcerpt" class="blog-meta"></p>
+          </div>
+        </div>
+        <div class="blog-sidebar" id="sidebarList"></div>
+      </div>
+
+      <div class="latest">
+        <div class="section-title">Recent highlights</div>
+        <div class="latest-grid" id="latestGrid"></div>
+      </div>
+
+      <div class="section-title">Admin (password protected)</div>
+      <div class="admin">
+        <div class="admin-card" id="loginCard">
+          <h4>Login to manage blogs</h4>
+          <div class="row">
+            <div>
+              <label for="adminPassword">Password</label>
+              <input id="adminPassword" type="password" placeholder="Enter password">
+            </div>
+          </div>
+          <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+            <button id="loginBtn">Login</button>
+            <span id="loginStatus" class="blog-meta"></span>
+          </div>
+        </div>
+
+        <div class="admin-card hidden" id="portalCard">
+          <h4>Blogs management</h4>
+          <div class="row">
+            <div>
+              <label for="title">Title</label>
+              <input id="title" type="text" placeholder="Blog title">
+            </div>
+            <div>
+              <label for="author">Author</label>
+              <input id="author" type="text" placeholder="Author(s)">
+            </div>
+            <div>
+              <label for="read">Read time</label>
+              <input id="read" type="text" placeholder="4 minute read">
+            </div>
+            <div>
+              <label for="image">Image URL</label>
+              <input id="image" type="text" placeholder="https://...jpg">
+            </div>
+          </div>
+          <div>
+            <label for="excerpt">Excerpt</label>
+            <textarea id="excerpt" rows="3" placeholder="Brief summary"></textarea>
+          </div>
+          <div style="margin:10px 0;">
+            <label><input type="checkbox" id="featuredToggle"> Mark as featured</label>
+          </div>
+          <button id="addBtn">Save post</button>
+        </div>
+
+        <div class="admin-card hidden" id="listCard">
+          <h4>Existing posts</h4>
+          <div class="blog-list" id="blogList"></div>
+          <button class="ghost-btn" id="resetBtn">Reset to defaults</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer_section">
+        <div class="top_ftbar">
+            <div class="container">
+                <div class="ft_logo">
+                    <img src="./book about us _files/footer_logo.png" alt="logo">
+                </div>
+                <div class="ft_content">
+                    <ul class="address_section">
+                        <li>
+                            <span>Address</span>
+                            <p>F-52/53, Om Vihar Extension, Gali No. 10, Uttam Nagar West, Delhi-110059</p>
+                        </li>
+                        <li>
+                            <span>Email</span>
+                            <p>info@ramayanparivar.com</p>
+                        </li>
+                        <li>
+                            <span>Phone</span>
+                            <p>+91-8368320801 <span>|</span> +91-8130767023</p>
+                        </li>
+                    </ul>
+                    <ul class="quick_links">
+                        <li>
+                            <span>Quick links</span>
+                            <ul>
+                                <li><a href="https://rammandirbook.com/about-us-copy.html">About Us</a></li>
+                                <li><a href="https://rammandirbook.com/our-aim.html">Our Aim</a></li>
+                                <li><a href="https://rammandirbook.com/about-us.html">Objectives</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="support_links">
+                        <li>
+                            <span>Quick links</span>
+                            <ul>
+                                <li><a href="https://www.youtube.com/@ramayanresearchcouncil">Youtube</a></li>
+                                <li><a href="https://www.facebook.com/RamayanResearchCouncil/">Facebook</a></li>
+                                <li><a href="https://www.instagram.com/ramayanresearchcouncil/">Instagram</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="ft_text">
+                        <li>
+                            <p>Ramayana Research Council’ is a registered organization in the form of ‘trust’ with a
+                                purpose to promote the cultural values of our country</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="copy_rightsection">
+            <p>Copyright © 2025 All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+      const defaultPosts = [
+        {id:'1', title:'Distributed Databases: Enabling Agentic AI Across Global Regions', author:'Devin Pratt, Marlanna Bozicevich', read:'4 minute read', excerpt:'How distributed data platforms unlock resilient, low-latency AI across geos with governance baked-in.', image:'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80', featured:true},
+        {id:'2', title:'Oracle VirtualBox 7.2 introduces support for macOS on Apple Silicon', author:'Simon Coter', read:'2 minute read', excerpt:'New hypervisor support expands developer agility across chip architectures.', image:'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=80', featured:false},
+        {id:'3', title:'Learning Never Stops: Oracle Race to Certification 2025', author:'Damien Carey', read:'4 minute read', excerpt:'Upskill fast with guided tracks across AI, OCI, and data.', image:'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80', featured:false},
+        {id:'4', title:'Oracle Cloud Infrastructure Data Science supports Llama 4', author:'Sasya Kodali, Wendy Yip', read:'3 minute read', excerpt:'Run modern LLMs with managed tooling, reproducible pipelines, and secure data access.', image:'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80', featured:false},
+        {id:'5', title:'Edge Observability: Keeping latency predictable at scale', author:'Platform Engineering', read:'5 minute read', excerpt:'Observability at the edge brings tighter SLOs and faster rollback when millisecond counts.', image:'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80', featured:false},
+        {id:'6', title:'Designing zero-trust APIs for multi-cloud', author:'Security Desk', read:'3 minute read', excerpt:'Patterns for signing, rotating, and monitoring tokens across heterogeneous stacks.', image:'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80', featured:false},
+      ];
+      const STORAGE_KEY = 'rrcBlogs';
+      const PASSWORD_HASH = '3ca278e53dd579672b6b05a1acd62cf6afba14bb0ca8c7ee1f5b40ae79e921f2'; // sha256 of RamBlogs@2025
+      const state = { posts: [], loggedIn: false };
+
+      function loadPosts() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        state.posts = saved ? JSON.parse(saved) : defaultPosts;
+      }
+      function savePosts() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.posts));
+      }
+      function render() {
+        if (!state.posts.length) return;
+        const feature = state.posts.find(p => p.featured) || state.posts[0];
+        const rest = state.posts.filter(p => p.id !== feature.id);
+        document.getElementById('featureImg').src = feature.image;
+        document.getElementById('featureImg').alt = feature.title;
+        document.getElementById('featureMeta').textContent = `${feature.author} • ${feature.read}`;
+        document.getElementById('featureTitle').textContent = feature.title;
+        document.getElementById('featureExcerpt').textContent = feature.excerpt;
+
+        const sidebar = document.getElementById('sidebarList');
+        sidebar.innerHTML = '';
+        rest.slice(0,3).forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'mini-card';
+          div.innerHTML = `
+            <img src="${p.image}" alt="${p.title}">
+            <div>
+              <h4>${p.title}</h4>
+              <div class="blog-meta">${p.author}</div>
+              <div class="blog-meta">${p.read}</div>
+            </div>`;
+          sidebar.appendChild(div);
+        });
+
+        const latest = document.getElementById('latestGrid');
+        latest.innerHTML = '';
+        rest.slice(0,6).forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'latest-card';
+          card.innerHTML = `
+            <img src="${p.image}" alt="${p.title}">
+            <div>
+              <h4>${p.title}</h4>
+              <div class="blog-meta">${p.author}</div>
+              <div class="blog-meta">${p.read}</div>
+            </div>`;
+          latest.appendChild(card);
+        });
+
+        const list = document.getElementById('blogList');
+        list.innerHTML = '';
+        state.posts.forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'blog-item';
+          item.innerHTML = `
+            <div>
+              <strong>${p.title}</strong><br>
+              <span class="blog-meta">${p.author} • ${p.read}</span>
+            </div>
+            <div class="blog-actions">
+              <span class="badge">${p.featured ? 'Featured' : 'Standard'}</span>
+              <button class="ghost-btn" data-id="${p.id}">Delete</button>
+            </div>`;
+          item.querySelector('button').onclick = () => {
+            state.posts = state.posts.filter(x => x.id !== p.id);
+            if (!state.posts.some(x => x.featured) && state.posts.length) {
+              state.posts[0].featured = true;
+            }
+            savePosts(); render();
+          };
+          list.appendChild(item);
+        });
+      }
+      // Lightweight SHA-256 (fallback when SubtleCrypto is unavailable, e.g., on file://)
+      function hashInput(str) {
+        if (window.crypto && window.crypto.subtle) {
+          const enc = new TextEncoder().encode(str);
+          return window.crypto.subtle.digest('SHA-256', enc).then(buf =>
+            Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
+          );
+        }
+        // Fallback JS implementation
+        return Promise.resolve(sha256(str));
+      }
+
+      // Minimal SHA-256 implementation
+      function sha256(ascii) {
+        const rightRotate = (value, amount) => (value >>> amount) | (value << (32 - amount));
+        let mathPow = Math.pow, maxWord = mathPow(2, 32), lengthProperty = 'length', i, j, result = '';
+        const words = [], asciiBitLength = ascii[lengthProperty] * 8;
+        const hash = sha256.h = sha256.h || [];
+        const k = sha256.k = sha256.k || [];
+        let primeCounter = k[lengthProperty];
+        const isComposite = {};
+        for (let candidate = 2; primeCounter < 64; candidate++) {
+          if (!isComposite[candidate]) {
+            for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+            hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+            k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+          }
+        }
+        ascii += '\x80';
+        while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+        for (i = 0; i < ascii[lengthProperty]; i++) {
+          j = ascii.charCodeAt(i);
+          if (j >> 8) return;
+          words[i >> 2] |= j << ((3 - i) % 4) * 8;
+        }
+        words[words[lengthProperty]] = (asciiBitLength / maxWord) | 0;
+        words[words[lengthProperty]] = asciiBitLength;
+        for (j = 0; j < words[lengthProperty];) {
+          const w = words.slice(j, j += 16);
+          const oldHash = hash.slice(0);
+          for (i = 0; i < 64; i++) {
+            const w15 = w[i - 15], w2 = w[i - 2];
+            const a = hash[0], e = hash[4];
+            const temp1 = hash[7]
+              + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+              + ((e & hash[5]) ^ (~e & hash[6]))
+              + k[i]
+              + (w[i] = (i < 16) ? w[i] : (
+                w[i - 16]
+                + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+                + w[i - 7]
+                + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+              ) | 0);
+            const temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+              + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+            hash = [(temp1 + temp2) | 0].concat(hash);
+            hash[4] = (hash[4] + temp1) | 0;
+            hash.pop();
+          }
+          for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+        }
+        for (i = 0; i < 8; i++) {
+          for (j = 3; j + 1; j--) {
+            const b = (hash[i] >> (j * 8)) & 255;
+            result += ((b < 16) ? 0 : '') + b.toString(16);
+          }
+        }
+        return result;
+      }
+    async function handleLogin() {
+      const input = document.getElementById('adminPassword').value;
+      const status = document.getElementById('loginStatus');
+      const hashed = await hashInput(input);
+      if (hashed === PASSWORD_HASH) {
+        state.loggedIn = true;
+        document.getElementById('loginCard').classList.add('hidden');
+        document.getElementById('portalCard').classList.remove('hidden');
+        document.getElementById('listCard').classList.remove('hidden');
+          status.textContent = '';
+        } else {
+          status.textContent = 'Incorrect password';
+        }
+      }
+      function addPost() {
+        const title = document.getElementById('title').value.trim();
+        const author = document.getElementById('author').value.trim() || 'RRC Editorial';
+        const read = document.getElementById('read').value.trim() || '3 minute read';
+        const image = document.getElementById('image').value.trim() || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80';
+        const excerpt = document.getElementById('excerpt').value.trim() || 'New blog entry.';
+        const featured = document.getElementById('featuredToggle').checked;
+        if (!title) return;
+        if (featured) state.posts.forEach(p => p.featured = false);
+        state.posts.unshift({id: crypto.randomUUID(), title, author, read, image, excerpt, featured});
+        savePosts(); render();
+      }
+      function resetPosts() { state.posts = defaultPosts; savePosts(); render(); }
+
+      $('#loginBtn').on('click', handleLogin);
+      $('#addBtn').on('click', addPost);
+      $('#resetBtn').on('click', resetPosts);
+
+      loadPosts(); render();
+
+      // mobile nav
+      $(".menu_open").click(function () {
+          $(this).toggleClass("active");
+          $('.nav_slidebar').toggleClass("active");
+          $('body').toggleClass('scroll-disable')
+      });
+      $('.dropdown_arrow').click(function(){
+          $(this).parent().toggleClass('active-dropdown');
+          $(this).siblings('ul').slideToggle()
+          $(this).parent().siblings().removeClass('active-dropdown');
+          $(this).parent().siblings('li').find('ul').slideUp();
+      });
+    </script>
+</body>
+</html>

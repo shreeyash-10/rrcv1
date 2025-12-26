@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
-import themeStyles from '../theme.css?raw';
 
 const injected = new Set();
-let themeAttached = false;
 
 const ensureLink = (href) => {
   if (!href || injected.has(href)) return;
@@ -26,12 +24,5 @@ export default function usePageAssets(assetDir, manifest) {
       ensureLink(href);
     });
 
-    if (!themeAttached) {
-      const style = document.createElement('style');
-      style.id = 'rrc-theme';
-      style.textContent = themeStyles;
-      document.head.appendChild(style);
-      themeAttached = true;
-    }
   }, [assetDir, manifest]);
 }

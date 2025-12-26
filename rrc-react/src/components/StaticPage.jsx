@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { resolveRoute } from '../linkResolver';
 import usePageAssets from '../hooks/usePageAssets';
 
@@ -77,19 +77,40 @@ const wireInteractions = (container) => {
     cleanups.push(() => indicator.removeEventListener('click', handler));
   });
 
+  const seeMoreButtons = container.querySelectorAll('.see-more');
+  seeMoreButtons.forEach((button) => {
+    const handler = () => {
+      container.querySelectorAll('.card.hidden').forEach((card) => {
+        card.classList.remove('hidden');
+      });
+      button.style.display = 'none';
+      button.closest('.see-more-wrapper')?.classList.add('hidden');
+    };
+    button.addEventListener('click', handler);
+    cleanups.push(() => button.removeEventListener('click', handler));
+  });
+
   return () => cleanups.forEach((fn) => fn && fn());
 };
 
-export default function StaticPage({ html, assetDir, title, manifest }) {
-  const navigate = useNavigate();
+export default function StaticPage({ children, assetDir, manifest }) {
+  const router = useRouter();
   const containerRef = useRef(null);
 
   usePageAssets(assetDir, manifest);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (title) document.title = title;
-  }, [html, title]);
+  }, [children]);
+
+  useEffect(() => {
+    const updateViewport = () => {
+      document.documentElement.style.setProperty('--app-vh', `${window.innerHeight * 0.01}px`);
+    };
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, []);
 
   useEffect(() => {
     const updateParallax = () => {
@@ -113,7 +134,7 @@ export default function StaticPage({ html, assetDir, title, manifest }) {
       if (!route) return;
       const handler = (event) => {
         event.preventDefault();
-        navigate(route);
+        router.push(route);
       };
       anchor.setAttribute('href', route);
       anchor.addEventListener('click', handler);
@@ -137,22 +158,18 @@ export default function StaticPage({ html, assetDir, title, manifest }) {
       });
     }
 
-    const topBar = container.querySelector('.top_bar .courtesy_bar');
-    const socials = container.querySelector('.header_bar .header_social');
-    if (topBar && socials) {
-      topBar.appendChild(socials);
-      socials.classList.add('top-socials');
-    }
+    container.querySelectorAll('.top_bar').forEach((bar) => bar.remove());
+    container.querySelectorAll('.courtesy_bar').forEach((bar) => bar.remove());
 
     return () => {
       cleanups.forEach((fn) => fn && fn());
       document.body.classList.remove('scroll-disable');
     };
-  }, [html, navigate]);
+  }, [children, router]);
 
   return (
     <div className="page-shell">
-      <div ref={containerRef} dangerouslySetInnerHTML={{ __html: html }} />
+      <div ref={containerRef}>{children}</div>
     </div>
   );
 }

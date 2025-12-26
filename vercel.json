@@ -1,8 +1,5 @@
 {
-  "framework": null,
+  "framework": "nextjs",
   "buildCommand": "cd rrc-react && npm install && npm run build",
-  "outputDirectory": "rrc-react/dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "outputDirectory": "rrc-react/.next"
 }

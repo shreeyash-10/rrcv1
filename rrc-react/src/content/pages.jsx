@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { apiUrl, resolveMediaUrl } from '../lib/apiClient';
 
 export function HomeContent() {
   return (
@@ -48,7 +49,7 @@ export function HomeContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/रामायण रिसर्च काउंसिल_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/रामायण रिसर्च काउंसिल_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/#">मीडिया</a>
@@ -852,7 +853,7 @@ export function AboutUsContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/about us_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/about us_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/about-us-copy.html#">मीडिया</a>
@@ -1204,7 +1205,7 @@ export function OurAimContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/about us 2_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/about us 2_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/our-aim.html#">मीडिया</a>
@@ -6374,6 +6375,77 @@ export function PressContent() {
 }
 
 export function PrintMediaCoverageContent() {
+  useEffect(() => {
+    const formatDate = (value) => {
+      if (!value) return '';
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return value;
+      return parsed.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
+    };
+
+    const appendCards = (
+      targetId,
+      items,
+      { includeDate, linkMode } = { includeDate: true, linkMode: 'link' }
+    ) => {
+      const target = document.getElementById(targetId);
+      if (!target || !Array.isArray(items) || !items.length) return;
+      target.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+      items.forEach((item) => {
+        const card = document.createElement('a');
+        card.className = 'card';
+        if (linkMode === 'image') {
+          const imageHref = resolveMediaUrl(item.url || item.image || '');
+          card.href = imageHref || '#';
+          if (imageHref) {
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          }
+        } else {
+          const href = item.link || item.url || '#';
+          card.href = href;
+          if (href && href !== '#') {
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          }
+        }
+        const image = document.createElement('img');
+        image.src = resolveMediaUrl(item.image || item.url || '');
+        image.alt = item.title || item.alt || 'Gallery item';
+        card.appendChild(image);
+        if (includeDate) {
+          const date = document.createElement('div');
+          date.className = 'date';
+          const label = formatDate(item.publishedAt || item.date || item.createdAt);
+          if (label) {
+            date.textContent = `📅 ${label}`;
+            card.appendChild(date);
+          }
+        }
+        fragment.appendChild(card);
+      });
+      target.prepend(fragment);
+    };
+
+    const load = async () => {
+      try {
+        const [newsRes, galleryRes] = await Promise.all([
+          fetch(apiUrl('/api/news')),
+          fetch(apiUrl('/api/gallery')),
+        ]);
+        const newsData = newsRes.ok ? await newsRes.json() : null;
+        const galleryData = galleryRes.ok ? await galleryRes.json() : null;
+        appendCards('newsGrid', newsData?.items || []);
+        appendCards('galleryGrid', galleryData?.items || [], { includeDate: false, linkMode: 'image' });
+      } catch {
+        // Silent fallback to static cards if API isn't available.
+      }
+    };
+
+    load();
+  }, []);
+
   return (
     <div>
       <header>
@@ -6771,21 +6843,35 @@ export function PrintGalleryContent() {
       return parsed.toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
     };
 
-    const appendCards = (targetId, items, { includeDate } = { includeDate: true }) => {
+    const appendCards = (
+      targetId,
+      items,
+      { includeDate, linkMode } = { includeDate: true, linkMode: 'link' }
+    ) => {
       const target = document.getElementById(targetId);
       if (!target || !Array.isArray(items) || !items.length) return;
+      target.innerHTML = '';
       const fragment = document.createDocumentFragment();
       items.forEach((item) => {
         const card = document.createElement('a');
         card.className = 'card';
-        const href = item.link || item.url || '#';
-        card.href = href;
-        if (href && href !== '#') {
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
+        if (linkMode === 'image') {
+          const imageHref = resolveMediaUrl(item.url || item.image || '');
+          card.href = imageHref || '#';
+          if (imageHref) {
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          }
+        } else {
+          const href = item.link || item.url || '#';
+          card.href = href;
+          if (href && href !== '#') {
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          }
         }
         const image = document.createElement('img');
-        image.src = item.image || item.url || '';
+        image.src = resolveMediaUrl(item.image || item.url || '');
         image.alt = item.title || item.alt || 'Gallery item';
         card.appendChild(image);
         if (includeDate) {
@@ -6805,13 +6891,13 @@ export function PrintGalleryContent() {
     const load = async () => {
       try {
         const [newsRes, galleryRes] = await Promise.all([
-          fetch('/api/news'),
-          fetch('/api/gallery'),
+          fetch(apiUrl('/api/news')),
+          fetch(apiUrl('/api/gallery')),
         ]);
         const newsData = newsRes.ok ? await newsRes.json() : null;
         const galleryData = galleryRes.ok ? await galleryRes.json() : null;
         appendCards('newsGrid', newsData?.items || []);
-        appendCards('galleryGrid', galleryData?.items || [], { includeDate: false });
+        appendCards('galleryGrid', galleryData?.items || [], { includeDate: false, linkMode: 'image' });
       } catch {
         // Silent fallback to static cards if API isn't available.
       }
@@ -7207,6 +7293,47 @@ export function PrintGalleryContent() {
 }
 
 export function GalleryVideoContent() {
+  useEffect(() => {
+    const toEmbedUrl = (url) => {
+      if (!url) return '';
+      if (url.includes('youtube.com/embed/')) return url;
+      const match = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://www.youtube.com/embed/${match[1]}?rel=0`;
+      }
+      return url;
+    };
+
+    const load = async () => {
+      try {
+        const response = await fetch(apiUrl('/api/videos'));
+        const data = response.ok ? await response.json() : null;
+        const items = Array.isArray(data?.items) ? data.items : [];
+        if (!items.length) return;
+        const grid = document.querySelector('.video_grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        items.forEach((item) => {
+          const box = document.createElement('div');
+          box.className = 'video_box';
+          const iframe = document.createElement('iframe');
+          iframe.width = '100%';
+          iframe.height = '300';
+          iframe.src = toEmbedUrl(item.url);
+          iframe.allowFullscreen = true;
+          box.appendChild(iframe);
+          fragment.appendChild(box);
+        });
+        grid.appendChild(fragment);
+      } catch {
+        // Keep static videos if API isn't available.
+      }
+    };
+
+    load();
+  }, []);
+
   return (
     <div>
       <header>
@@ -7546,7 +7673,7 @@ export function OurTeamContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/our team main_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/our team main_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/teamMember.html#">मीडिया</a>
@@ -8087,7 +8214,7 @@ export function OtherTeamContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/other team_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/other team_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/reaserchersTeam.html#">मीडिया</a>
@@ -8409,7 +8536,7 @@ export function SantMandalContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/sant mandal_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/sant mandal_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/santSanrakshakMandal.html#">मीडिया</a>
@@ -8737,7 +8864,7 @@ export function SitaSamitiContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/sita samiti_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/sita samiti_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/sitaSakhiSamethi.html#">मीडिया</a>
@@ -9055,7 +9182,7 @@ export function StateTeamContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/state team_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/state team_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/stateTeam.html#">मीडिया</a>
@@ -9360,7 +9487,7 @@ export function AdvisorsContent() {
                     </li>
                   </ul>
                   <div className="logo">
-                    <a href="https://www.ramayanresearchcouncil.com/index.html"><img alt="Ramaynmanch" src="/assets/advisors_files/logo.png" /></a>
+                    <a href="/"><img alt="Ramaynmanch" src="/assets/advisors_files/logo.png" /></a>
                   </div>
                   <ul className="hidden_mobile">
                     <li><a href="https://www.ramayanresearchcouncil.com/advisorteam.html#">मीडिया</a>
@@ -10718,31 +10845,25 @@ export function MessageContent() {
   );
 }
 
-const FALLBACK_BLOG_POSTS = [
-  { id: '1', title: 'Distributed Databases: Enabling Agentic AI Across Global Regions', author: 'Devin Pratt, Marlanna Bozicevich', read: '4 minute read', excerpt: 'How distributed data platforms unlock resilient, low-latency AI across geos with governance baked-in.', image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80', featured: true },
-  { id: '2', title: 'Oracle VirtualBox 7.2 introduces support for macOS on Apple Silicon', author: 'Simon Coter', read: '2 minute read', excerpt: 'New hypervisor support expands developer agility across chip architectures.', image: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=80', featured: false },
-  { id: '3', title: 'Learning Never Stops: Oracle Race to Certification 2025', author: 'Damien Carey', read: '4 minute read', excerpt: 'Upskill fast with guided tracks across AI, OCI, and data.', image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80', featured: false },
-  { id: '4', title: 'Oracle Cloud Infrastructure Data Science supports Llama 4', author: 'Sasya Kodali, Wendy Yip', read: '3 minute read', excerpt: 'Run modern LLMs with managed tooling, reproducible pipelines, and secure data access.', image: 'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80', featured: false },
-  { id: '5', title: 'Edge Observability: Keeping latency predictable at scale', author: 'Platform Engineering', read: '5 minute read', excerpt: 'Observability at the edge brings tighter SLOs and faster rollback when millisecond counts.', image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80', featured: false },
-  { id: '6', title: 'Designing zero-trust APIs for multi-cloud', author: 'Security Desk', read: '3 minute read', excerpt: 'Patterns for signing, rotating, and monitoring tokens across heterogeneous stacks.', image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80', featured: false },
-];
-
 export function BlogsContent() {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
     const load = async () => {
       try {
-        const response = await fetch('/api/blogs');
+        const response = await fetch(apiUrl('/api/blogs'));
         const data = response.ok ? await response.json() : null;
         const items = Array.isArray(data?.items) ? data.items : [];
         if (active) {
-          setPosts(items.length ? items : FALLBACK_BLOG_POSTS);
+          setPosts(items);
+          setLoading(false);
         }
       } catch {
         if (active) {
-          setPosts(FALLBACK_BLOG_POSTS);
+          setPosts([]);
+          setLoading(false);
         }
       }
     };
@@ -10752,12 +10873,18 @@ export function BlogsContent() {
     };
   }, []);
 
+  const hasPosts = posts.length > 0;
   const feature = posts.find((post) => post.featured) || posts[0];
+  const featureId = feature?._id || feature?.id || '';
   const rest = posts.filter((post) => post !== feature);
 
   return (
     <div>
-      <style dangerouslySetInnerHTML={{__html: "\n    /* Blog page styling */\n    .blog-hero {background: linear-gradient(180deg, #49263d 17.31%, #8b4e5d 100%); color: #fff; padding: 40px 0 70px;}\n    .blog-hero .hero-inner {max-width: 1180px; margin: 0 auto; padding: 0 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;}\n    .blog-hero h1 {font-size: 34px; margin: 0 0 8px; font-weight: 800;}\n    .blog-hero p {margin: 0; color: #ffe7da; font-size: 16px;}\n    .blog-follow {display: flex; align-items: center; gap: 10px; font-weight: 700;}\n    .blogs-wrapper {max-width: 1180px; margin: -40px auto 60px; padding: 0 20px;}\n    .blogs-panel {background: #fff; border-radius: 14px; box-shadow: 0 18px 32px rgba(18,43,76,0.08); padding: 16px; display: grid; grid-template-columns: 2fr 1fr; gap: 14px;}\n    .blog-feature {border-radius: 12px; overflow: hidden; background: #000; display: flex; flex-direction: column;}\n    .blog-feature img {width: 100%; height: 340px; object-fit: cover; display: block;}\n    .blog-feature .body {padding: 16px 18px 18px; background: #fff;}\n    .blog-feature h2 {margin: 0 0 8px; font-size: 24px; line-height: 1.3; color: #49263d;}\n    .blog-meta {color: #777; font-size: 14px; margin: 0 0 10px;}\n    .blog-sidebar {display: flex; flex-direction: column; gap: 12px;}\n    .mini-card {display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 10px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff;}\n    .mini-card img {width: 100%; height: 90px; object-fit: cover; border-radius: 8px;}\n    .mini-card h4 {margin: 0 0 6px; font-size: 15px; line-height: 1.4; color: #49263d;}\n    .mini-card .blog-meta {margin: 0; font-size: 13px;}\n    .latest {margin-top: 24px;}\n    .latest h3 {margin: 0 0 12px; font-size: 18px; color: #49263d;}\n    .latest-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px;}\n    .latest-card {background: #fff; border-radius: 12px; border: 1px solid #e6e6e6; padding: 12px; display: flex; gap: 12px;}\n    .latest-card img {width: 96px; height: 96px; object-fit: cover; border-radius: 8px; flex-shrink: 0;}\n    .latest-card h4 {margin: 0 0 6px; font-size: 15px; color: #49263d;}\n    .latest-card .blog-meta {margin: 0; font-size: 13px;}\n    .section-title {margin: 28px 0 12px; font-weight: 700; font-size: 18px; color: #49263d;}\n    .admin {margin-top: 32px; display: grid; gap: 12px;}\n    .admin-card {background: #fff; border: 1px solid #e6e6e6; border-radius: 12px; padding: 14px;}\n    .admin-card h4 {margin: 0 0 10px; color: #49263d;}\n    .admin input, .admin textarea {width: 100%; padding: 10px; border: 1px solid #e6e6e6; border-radius: 8px; font-family: inherit;}\n    .admin label {font-weight: 600; font-size: 13px; display: block; margin: 0 0 4px; color: #49263d;}\n    .admin .row {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 10px;}\n    .admin button {background: #db4242; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 700; cursor: pointer;}\n    .ghost-btn {background: #f2f2f2; color: #333; border: 1px solid #e6e6e6; padding: 8px 10px; border-radius: 8px; cursor: pointer;}\n    .badge {display: inline-flex; align-items: center; gap: 6px; background: #f5f5f5; padding: 6px 8px; border-radius: 8px; border: 1px solid #e6e6e6; font-size: 12px;}\n    .blog-list {display: grid; gap: 8px;}\n    .blog-item {border: 1px solid #e6e6e6; border-radius: 10px; padding: 10px; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;}\n    .blog-actions {display: flex; gap: 6px;}\n    .hidden {display: none;}\n    @media (max-width: 900px) {.blogs-panel {grid-template-columns: 1fr;} .blog-feature img {height: 240px;} .mini-card {grid-template-columns: 100px 1fr;}}\n    @media (max-width: 640px) {.blog-hero {padding: 32px 0 44px;} .blog-hero .hero-inner {flex-direction: column; align-items: flex-start;} .blog-feature img {height: 200px;} .latest-card {flex-direction: column;} .latest-card img {width: 100%; height: 160px;}}\n  " }} />
+      <style dangerouslySetInnerHTML={{__html: `\n    /* Blog page styling */\n    .blog-hero {background: linear-gradient(180deg, #49263d 17.31%, #8b4e5d 100%); color: #fff; padding: 40px 0 70px;}\n    .blog-hero .hero-inner {max-width: 1180px; margin: 0 auto; padding: 0 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;}\n    .blog-hero h1 {font-size: 34px; margin: 0 0 8px; font-weight: 800;}\n    .blog-hero p {margin: 0; color: #ffe7da; font-size: 16px;}\n    .blog-follow {display: flex; align-items: center; gap: 10px; font-weight: 700;}\n    .blogs-wrapper {max-width: 1180px; margin: -40px auto 60px; padding: 0 20px;}\n    .blogs-panel {background: #fff; border-radius: 14px; box-shadow: 0 18px 32px rgba(18,43,76,0.08); padding: 16px; display: grid; grid-template-columns: 2fr 1fr; gap: 14px;}\n    .blog-feature {border-radius: 12px; overflow: hidden; background: #000; display: flex; flex-direction: column; text-decoration: none;}\n    .blog-feature img {width: 100%; height: 340px; object-fit: cover; display: block;}\n    .blog-feature .body {padding: 16px 18px 18px; background: #fff;}\n    .blog-feature h2 {margin: 0 0 8px; font-size: 24px; line-height: 1.3; color: #49263d;}
+    .blog-feature:hover {box-shadow: 0 14px 28px rgba(18,43,76,0.12);}
+    .blog-feature:hover h2 {text-decoration: underline;}\n    .blog-meta {color: #777; font-size: 14px; margin: 0 0 10px;}\n    .blog-sidebar {display: flex; flex-direction: column; gap: 12px;}\n    .mini-card {display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 10px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff; text-decoration: none;}
+    .mini-card:hover h4 {text-decoration: underline;}\n    .mini-card img {width: 100%; height: 90px; object-fit: cover; border-radius: 8px;}\n    .mini-card h4 {margin: 0 0 6px; font-size: 15px; line-height: 1.4; color: #49263d;}\n    .mini-card .blog-meta {margin: 0; font-size: 13px;}\n    .latest {margin-top: 24px;}\n    .latest h3 {margin: 0 0 12px; font-size: 18px; color: #49263d;}\n    .latest-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px;}\n    .latest-card {background: #fff; border-radius: 12px; border: 1px solid #e6e6e6; padding: 12px; display: flex; gap: 12px; text-decoration: none;}
+    .latest-card:hover h4 {text-decoration: underline;}\n    .latest-card img {width: 96px; height: 96px; object-fit: cover; border-radius: 8px; flex-shrink: 0;}\n    .latest-card h4 {margin: 0 0 6px; font-size: 15px; color: #49263d;}\n    .latest-card .blog-meta {margin: 0; font-size: 13px;}\n    .section-title {margin: 28px 0 12px; font-weight: 700; font-size: 18px; color: #49263d;}\n    .blogs-empty {background: #fff; border-radius: 14px; border: 1px solid #e6e6e6; padding: 24px; text-align: center; color: #49263d;}\n    .blogs-empty p {margin: 6px 0 0; color: #777;}\n    .admin {margin-top: 32px; display: grid; gap: 12px;}\n    .admin-card {background: #fff; border: 1px solid #e6e6e6; border-radius: 12px; padding: 14px;}\n    .admin-card h4 {margin: 0 0 10px; color: #49263d;}\n    .admin input, .admin textarea {width: 100%; padding: 10px; border: 1px solid #e6e6e6; border-radius: 8px; font-family: inherit;}\n    .admin label {font-weight: 600; font-size: 13px; display: block; margin: 0 0 4px; color: #49263d;}\n    .admin .row {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 10px;}\n    .admin button {background: #db4242; color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 700; cursor: pointer;}\n    .ghost-btn {background: #f2f2f2; color: #333; border: 1px solid #e6e6e6; padding: 8px 10px; border-radius: 8px; cursor: pointer;}\n    .badge {display: inline-flex; align-items: center; gap: 6px; background: #f5f5f5; padding: 6px 8px; border-radius: 8px; border: 1px solid #e6e6e6; font-size: 12px;}\n    .blog-list {display: grid; gap: 8px;}\n    .blog-item {border: 1px solid #e6e6e6; border-radius: 10px; padding: 10px; display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;}\n    .blog-actions {display: flex; gap: 6px;}\n    .hidden {display: none;}\n    @media (max-width: 900px) {.blogs-panel {grid-template-columns: 1fr;} .blog-feature img {height: 240px;} .mini-card {grid-template-columns: 100px 1fr;}}\n    @media (max-width: 640px) {.blog-hero {padding: 32px 0 44px;} .blog-hero .hero-inner {flex-direction: column; align-items: flex-start;} .blog-feature img {height: 200px;} .latest-card {flex-direction: column;} .latest-card img {width: 100%; height: 160px;}}\n  ` }} />
       <header>
         <div className="container-fluid">
           <div className="row top_bar hidden_mobile">
@@ -10934,43 +11061,58 @@ export function BlogsContent() {
         </div>
       </section>
       <main className="blogs-wrapper">
-        <div className="blogs-panel">
-          <div className="blog-feature">
-            <img src={feature?.image || '/assets/book.com_files/slider-1.png'} alt={feature?.title || 'Featured blog'} />
-            <div className="body">
-              <div className="blog-meta">{feature ? `${feature.author} • ${feature.read}` : '—'}</div>
-              <h2>{feature?.title || '—'}</h2>
-              <p className="blog-meta">{feature?.excerpt || ''}</p>
+        {!hasPosts ? (
+          <div className="blogs-empty">
+            <h3>{loading ? 'Loading blogs…' : 'No blogs published yet.'}</h3>
+            {!loading && <p>Visit /admin to add your first blog post.</p>}
+          </div>
+        ) : (
+          <>
+            <div className="blogs-panel">
+              <a className="blog-feature" href={featureId ? `/blogs/${featureId}` : '#'}>
+                <img src={resolveMediaUrl(feature?.image) || '/assets/book.com_files/slider-1.png'} alt={feature?.title || 'Featured blog'} />
+                <div className="body">
+                  <div className="blog-meta">{feature ? `${feature.author} • ${feature.read}` : '—'}</div>
+                  <h2>{feature?.title || '—'}</h2>
+                  <p className="blog-meta">{feature?.excerpt || ''}</p>
+                </div>
+              </a>
+              <div className="blog-sidebar">
+                {rest.slice(0, 3).map((post) => {
+                  const postId = post._id || post.id;
+                  return (
+                    <a className="mini-card" href={postId ? `/blogs/${postId}` : '#'} key={postId || post.title}>
+                      <img src={resolveMediaUrl(post.image)} alt={post.title} />
+                      <div>
+                        <h4>{post.title}</h4>
+                        <div className="blog-meta">{post.author}</div>
+                        <div className="blog-meta">{post.read}</div>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-          <div className="blog-sidebar">
-            {rest.slice(0, 3).map((post) => (
-              <div className="mini-card" key={post.id}>
-                <img src={post.image} alt={post.title} />
-                <div>
-                  <h4>{post.title}</h4>
-                  <div className="blog-meta">{post.author}</div>
-                  <div className="blog-meta">{post.read}</div>
-                </div>
+            <div className="latest">
+              <div className="section-title">Recent highlights</div>
+              <div className="latest-grid">
+                {rest.slice(0, 6).map((post) => {
+                  const postId = post._id || post.id;
+                  return (
+                    <a className="latest-card" href={postId ? `/blogs/${postId}` : '#'} key={postId || post.title}>
+                      <img src={resolveMediaUrl(post.image)} alt={post.title} />
+                      <div>
+                        <h4>{post.title}</h4>
+                        <div className="blog-meta">{post.author}</div>
+                        <div className="blog-meta">{post.read}</div>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="latest">
-          <div className="section-title">Recent highlights</div>
-          <div className="latest-grid">
-            {rest.slice(0, 6).map((post) => (
-              <div className="latest-card" key={post.id}>
-                <img src={post.image} alt={post.title} />
-                <div>
-                  <h4>{post.title}</h4>
-                  <div className="blog-meta">{post.author}</div>
-                  <div className="blog-meta">{post.read}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </main>
       <footer className="footer_section">
         <div className="top_ftbar">

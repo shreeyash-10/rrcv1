@@ -1629,11 +1629,11 @@ header .header_container .header_bar .join_rcc a {
 }
 .iu-section::before {
     left: 0;
-    background-image: url('left-mandala.png'); /* Replace with your left mandala image */
+    background-image: url('/assets/common/left-mandala.png'); /* Replace with your left mandala image */
 }
 .iu-section::after {
     right: 0;
-    background-image: url('right-mandala.png'); /* Replace with your right mandala image */
+    background-image: url('/assets/common/right-mandala.png'); /* Replace with your right mandala image */
 }
 
 /* ===== CONTENT CONTAINER ===== */

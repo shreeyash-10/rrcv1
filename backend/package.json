@@ -1,0 +1,23 @@
+{
+  "name": "rrc-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "seed:blogs": "node src/seed/seedBlogs.js",
+    "seed:gallery": "node src/seed/seedGallery.js",
+    "seed:videos": "node src/seed/seedVideos.js",
+    "seed:news": "node src/seed/seedNews.js",
+    "seed:media": "npm run seed:gallery && npm run seed:news && npm run seed:videos",
+    "seed:all": "npm run seed:blogs && npm run seed:gallery && npm run seed:news && npm run seed:videos"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3"
+  }
+}

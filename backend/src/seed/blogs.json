@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Ramayan Research Council: Mission and Vision",
+    "author": "RRC Editorial",
+    "read": "4 minute read",
+    "excerpt": "An overview of the council's mission to preserve and share India's cultural heritage through research and outreach.",
+    "content": "The Ramayan Research Council is a registered trust focused on preserving cultural values through research, publications, and community engagement. This post summarizes our mission, vision, and long-term goals.",
+    "image": "/assets/book.com_files/slider-1.png",
+    "featured": true,
+    "published": true
+  },
+  {
+    "title": "Sita Sthapna Initiative in Sitamarhi",
+    "author": "RRC Editorial",
+    "read": "3 minute read",
+    "excerpt": "Highlights from ongoing efforts to develop the Sita temple area and promote pilgrimage tourism.",
+    "content": "The council continues its efforts in Sitamarhi (Bihar) to strengthen pilgrimage infrastructure and promote cultural awareness around the Sita temple area.",
+    "image": "/assets/book.com_files/slider-2.png",
+    "featured": false,
+    "published": true
+  },
+  {
+    "title": "Ram Lalla Book Project: Progress Update",
+    "author": "RRC Editorial",
+    "read": "5 minute read",
+    "excerpt": "Updates on the research and publication work behind the Ram Lalla book project.",
+    "content": "The book project documents decades of historical and cultural context around the Ram Lalla temple movement. This update shares current milestones and publication plans.",
+    "image": "/assets/book.com_files/slider-3.png",
+    "featured": false,
+    "published": true
+  }
+]

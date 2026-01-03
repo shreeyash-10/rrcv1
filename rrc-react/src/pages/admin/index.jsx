@@ -59,6 +59,17 @@ export default function AdminPage() {
   const [editingGalleryId, setEditingGalleryId] = useState(null);
   const [editingNewsId, setEditingNewsId] = useState(null);
   const [editingVideoId, setEditingVideoId] = useState(null);
+  const [activeSection, setActiveSection] = useState('media');
+  const [openPanels, setOpenPanels] = useState(() => ({
+    galleryForm: false,
+    galleryList: true,
+    newsForm: false,
+    newsList: true,
+    blogForm: false,
+    blogList: true,
+    videoForm: false,
+    videoList: true,
+  }));
 
   const loadCollections = async (token = authToken) => {
     const [gallery, news, blogs, videos] = await Promise.all([
@@ -97,6 +108,30 @@ export default function AdminPage() {
     };
     checkSession();
   }, []);
+
+  useEffect(() => {
+    if (editingGalleryId) {
+      setOpenPanels((prev) => ({ ...prev, galleryForm: true }));
+    }
+  }, [editingGalleryId]);
+
+  useEffect(() => {
+    if (editingNewsId) {
+      setOpenPanels((prev) => ({ ...prev, newsForm: true }));
+    }
+  }, [editingNewsId]);
+
+  useEffect(() => {
+    if (editingBlogId) {
+      setOpenPanels((prev) => ({ ...prev, blogForm: true }));
+    }
+  }, [editingBlogId]);
+
+  useEffect(() => {
+    if (editingVideoId) {
+      setOpenPanels((prev) => ({ ...prev, videoForm: true }));
+    }
+  }, [editingVideoId]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -370,6 +405,17 @@ export default function AdminPage() {
     setBlogForm({ title: '', author: '', read: '', excerpt: '', content: '', imageUrl: '', file: null, featured: false, published: true });
   };
 
+  const handlePanelToggle = (panelKey) => (event) => {
+    const isOpen = event?.currentTarget?.open ?? event?.target?.open ?? false;
+    setOpenPanels((prev) => ({ ...prev, [panelKey]: Boolean(isOpen) }));
+  };
+
+  const userLabel =
+    typeof session.user === 'object' && session.user !== null
+      ? session.user.name || session.user.username || session.user.email || 'Admin'
+      : session.user || 'Admin';
+  const mediaCount = galleryItems.length + videoItems.length;
+
   return (
     <div className="admin-shell">
       <Head>
@@ -379,7 +425,7 @@ export default function AdminPage() {
         <div className="admin-header">
           <div>
             <h1>Admin Console</h1>
-            <p>Manage gallery uploads, news coverage, and blogs.</p>
+            <p>Manage media, news coverage, and blog posts.</p>
           </div>
           {session.authenticated && (
             <button type="button" className="btn-secondary" onClick={handleLogout}>
@@ -421,332 +467,527 @@ export default function AdminPage() {
               </div>
             )}
 
-            <section className="admin-card">
-              <h2>{editingGalleryId ? 'Edit gallery item' : 'Gallery uploads'}</h2>
-              <form className="admin-form" onSubmit={handleGallerySubmit}>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={galleryForm.title}
-                    onChange={(event) => setGalleryForm((prev) => ({ ...prev, title: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Alt text
-                  <input
-                    type="text"
-                    value={galleryForm.alt}
-                    onChange={(event) => setGalleryForm((prev) => ({ ...prev, alt: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Image URL
-                  <input
-                    type="url"
-                    value={galleryForm.imageUrl}
-                    onChange={(event) => setGalleryForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Image file
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => setGalleryForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
-                  />
-                </label>
-                <div className="admin-actions">
-                  <button type="submit">{editingGalleryId ? 'Update gallery item' : 'Add to gallery'}</button>
-                  {editingGalleryId && (
-                    <button type="button" className="ghost-btn" onClick={handleCancelGalleryEdit}>
-                      Cancel
-                    </button>
-                  )}
+            <div className="admin-toolbar">
+              <div>
+                <h2>Content workspace</h2>
+                <p>Use the tabs to switch sections. Expand each panel to focus on edits.</p>
+              </div>
+              <div className="admin-user">
+                <span className="admin-user-label">Signed in as</span>
+                <span className="admin-user-name">{userLabel}</span>
+              </div>
+            </div>
+
+            <nav className="admin-nav" aria-label="Admin sections">
+              <button
+                type="button"
+                className={`admin-tab ${activeSection === 'media' ? 'active' : ''}`}
+                onClick={() => setActiveSection('media')}
+                aria-pressed={activeSection === 'media'}
+              >
+                Media
+                <span className="admin-tab-count">{mediaCount}</span>
+              </button>
+              <button
+                type="button"
+                className={`admin-tab ${activeSection === 'news' ? 'active' : ''}`}
+                onClick={() => setActiveSection('news')}
+                aria-pressed={activeSection === 'news'}
+              >
+                News
+                <span className="admin-tab-count">{newsItems.length}</span>
+              </button>
+              <button
+                type="button"
+                className={`admin-tab ${activeSection === 'blogs' ? 'active' : ''}`}
+                onClick={() => setActiveSection('blogs')}
+                aria-pressed={activeSection === 'blogs'}
+              >
+                Blogs
+                <span className="admin-tab-count">{blogItems.length}</span>
+              </button>
+            </nav>
+
+            {activeSection === 'media' && (
+              <div className="admin-section">
+                <div className="admin-section-header">
+                  <div>
+                    <h2>Media library</h2>
+                    <p>Manage gallery images and YouTube embeds.</p>
+                  </div>
+                  <div className="admin-section-meta">
+                    <span className="admin-pill">{galleryItems.length} images</span>
+                    <span className="admin-pill">{videoItems.length} videos</span>
+                  </div>
                 </div>
-              </form>
-              <div className="admin-list">
-                {galleryItems.map((item) => {
-                  const itemId = item.id || item._id;
-                  const title = item.title || item.alt || 'Gallery item';
-                  const imageUrl = resolveMediaUrl(item.url || item.image || '');
-                  return (
-                    <div className="admin-list-item" key={itemId}>
-                      <div className="admin-item">
-                        {imageUrl && <img className="admin-thumb" src={imageUrl} alt={title} />}
-                        <div>
-                          <div className="admin-item-title">{title}</div>
-                          {imageUrl && (
-                            <a className="admin-item-link" href={imageUrl} target="_blank" rel="noopener noreferrer">
-                              Open image
-                            </a>
+                <div className="admin-section-grid">
+                  <section className="admin-card">
+                    <div className="admin-card-header">
+                      <div>
+                        <h3>Gallery</h3>
+                        <p>Add highlights for the site gallery.</p>
+                      </div>
+                      <span className="admin-pill">{galleryItems.length} items</span>
+                    </div>
+                    <details
+                      className="admin-collapse"
+                      open={openPanels.galleryForm}
+                      onToggle={handlePanelToggle('galleryForm')}
+                    >
+                      <summary>Upload or edit gallery items</summary>
+                      <div className="admin-collapse-body">
+                        <form className="admin-form" onSubmit={handleGallerySubmit}>
+                          <label>
+                            Title
+                            <input
+                              type="text"
+                              value={galleryForm.title}
+                              onChange={(event) => setGalleryForm((prev) => ({ ...prev, title: event.target.value }))}
+                            />
+                          </label>
+                          <label>
+                            Alt text
+                            <input
+                              type="text"
+                              value={galleryForm.alt}
+                              onChange={(event) => setGalleryForm((prev) => ({ ...prev, alt: event.target.value }))}
+                            />
+                          </label>
+                          <label>
+                            Image URL
+                            <input
+                              type="url"
+                              value={galleryForm.imageUrl}
+                              onChange={(event) => setGalleryForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+                            />
+                          </label>
+                          <label>
+                            Image file
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(event) => setGalleryForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
+                            />
+                          </label>
+                          <div className="admin-actions">
+                            <button type="submit">{editingGalleryId ? 'Update gallery item' : 'Add to gallery'}</button>
+                            {editingGalleryId && (
+                              <button type="button" className="ghost-btn" onClick={handleCancelGalleryEdit}>
+                                Cancel
+                              </button>
+                            )}
+                          </div>
+                        </form>
+                      </div>
+                    </details>
+                    <details
+                      className="admin-collapse"
+                      open={openPanels.galleryList}
+                      onToggle={handlePanelToggle('galleryList')}
+                    >
+                      <summary>Gallery items</summary>
+                      <div className="admin-collapse-body">
+                        <div className="admin-list">
+                          {galleryItems.length === 0 ? (
+                            <div className="admin-empty">No gallery items yet.</div>
+                          ) : (
+                            galleryItems.map((item) => {
+                              const itemId = item.id || item._id;
+                              const title = item.title || item.alt || 'Gallery item';
+                              const imageUrl = resolveMediaUrl(item.url || item.image || '');
+                              return (
+                                <div className="admin-list-item" key={itemId}>
+                                  <div className="admin-item">
+                                    {imageUrl && <img className="admin-thumb" src={imageUrl} alt={title} />}
+                                    <div>
+                                      <div className="admin-item-title">{title}</div>
+                                      {imageUrl && (
+                                        <a className="admin-item-link" href={imageUrl} target="_blank" rel="noopener noreferrer">
+                                          Open image
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="admin-actions">
+                                    <button type="button" className="ghost-btn" onClick={() => handleEditGallery(item)}>Edit</button>
+                                    <button type="button" className="ghost-btn" onClick={() => handleDelete('gallery', itemId)}>Delete</button>
+                                  </div>
+                                </div>
+                              );
+                            })
                           )}
                         </div>
                       </div>
-                      <div className="admin-actions">
-                        <button type="button" className="ghost-btn" onClick={() => handleEditGallery(item)}>Edit</button>
-                        <button type="button" className="ghost-btn" onClick={() => handleDelete('gallery', itemId)}>Delete</button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
+                    </details>
+                  </section>
 
-            <section className="admin-card">
-              <h2>{editingNewsId ? 'Edit news coverage' : 'News coverage'}</h2>
-              <form className="admin-form" onSubmit={handleNewsSubmit}>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={newsForm.title}
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, title: event.target.value }))}
-                    required
-                  />
-                </label>
-                <label>
-                  Link
-                  <input
-                    type="url"
-                    value={newsForm.link}
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, link: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Date
-                  <input
-                    type="date"
-                    value={newsForm.date}
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, date: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Or image URL
-                  <input
-                    type="url"
-                    value={newsForm.imageUrl}
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Image file
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
-                  />
-                </label>
-                <label className="inline">
-                  <input
-                    type="checkbox"
-                    checked={newsForm.published}
-                    onChange={(event) => setNewsForm((prev) => ({ ...prev, published: event.target.checked }))}
-                  />
-                  Publish immediately
-                </label>
-                <div className="admin-actions">
-                  <button type="submit">{editingNewsId ? 'Update news' : 'Publish news'}</button>
-                  {editingNewsId && (
-                    <button type="button" className="ghost-btn" onClick={handleCancelNewsEdit}>
-                      Cancel
-                    </button>
-                  )}
-                </div>
-              </form>
-              <div className="admin-list">
-                {newsItems.map((item) => {
-                  const itemId = item.id || item._id;
-                  const imageUrl = resolveMediaUrl(item.image || '');
-                  const dateLabel = item.publishedAt ? item.publishedAt.slice(0, 10) : '';
-                  return (
-                    <div className="admin-list-item" key={itemId}>
-                      <div className="admin-item">
-                        {imageUrl && <img className="admin-thumb" src={imageUrl} alt={item.title} />}
-                        <div>
-                          <div className="admin-item-title">{item.title}</div>
-                          <div className="admin-item-meta">{dateLabel}</div>
-                          {item.link && item.link !== '#' && (
-                            <a className="admin-item-link" href={item.link} target="_blank" rel="noopener noreferrer">
-                              Open article
-                            </a>
+                  <section className="admin-card">
+                    <div className="admin-card-header">
+                      <div>
+                        <h3>Video gallery</h3>
+                        <p>Add YouTube links for the media page.</p>
+                      </div>
+                      <span className="admin-pill">{videoItems.length} videos</span>
+                    </div>
+                    <details
+                      className="admin-collapse"
+                      open={openPanels.videoForm}
+                      onToggle={handlePanelToggle('videoForm')}
+                    >
+                      <summary>Add or edit videos</summary>
+                      <div className="admin-collapse-body">
+                        <form className="admin-form" onSubmit={handleVideoSubmit}>
+                          <label>
+                            Title
+                            <input
+                              type="text"
+                              value={videoForm.title}
+                              onChange={(event) => setVideoForm((prev) => ({ ...prev, title: event.target.value }))}
+                            />
+                          </label>
+                          <label>
+                            YouTube URL
+                            <input
+                              type="url"
+                              value={videoForm.url}
+                              onChange={(event) => setVideoForm((prev) => ({ ...prev, url: event.target.value }))}
+                              required
+                            />
+                          </label>
+                          <label className="inline">
+                            <input
+                              type="checkbox"
+                              checked={videoForm.published}
+                              onChange={(event) => setVideoForm((prev) => ({ ...prev, published: event.target.checked }))}
+                            />
+                            Publish immediately
+                          </label>
+                          <div className="admin-actions">
+                            <button type="submit">{editingVideoId ? 'Update video' : 'Add video'}</button>
+                            {editingVideoId && (
+                              <button type="button" className="ghost-btn" onClick={handleCancelVideoEdit}>
+                                Cancel
+                              </button>
+                            )}
+                          </div>
+                        </form>
+                      </div>
+                    </details>
+                    <details
+                      className="admin-collapse"
+                      open={openPanels.videoList}
+                      onToggle={handlePanelToggle('videoList')}
+                    >
+                      <summary>Video entries</summary>
+                      <div className="admin-collapse-body">
+                        <div className="admin-list">
+                          {videoItems.length === 0 ? (
+                            <div className="admin-empty">No videos yet.</div>
+                          ) : (
+                            videoItems.map((item) => {
+                              const itemId = item.id || item._id;
+                              return (
+                                <div className="admin-list-item" key={itemId}>
+                                  <div className="admin-item">
+                                    <div>
+                                      <div className="admin-item-title">{item.title || item.url}</div>
+                                      {item.url && (
+                                        <a className="admin-item-link" href={item.url} target="_blank" rel="noopener noreferrer">
+                                          Open video
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="admin-actions">
+                                    <button type="button" className="ghost-btn" onClick={() => handleEditVideo(item)}>Edit</button>
+                                    <button type="button" className="ghost-btn" onClick={() => handleDelete('videos', itemId)}>Delete</button>
+                                  </div>
+                                </div>
+                              );
+                            })
                           )}
                         </div>
                       </div>
-                      <div className="admin-actions">
-                        <button type="button" className="ghost-btn" onClick={() => handleEditNews(item)}>Edit</button>
-                        <button type="button" className="ghost-btn" onClick={() => handleDelete('news', itemId)}>Delete</button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section className="admin-card">
-              <h2>Blog posts</h2>
-              <form className="admin-form" onSubmit={handleBlogSubmit}>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={blogForm.title}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, title: event.target.value }))}
-                    required
-                  />
-                </label>
-                <label>
-                  Author
-                  <input
-                    type="text"
-                    value={blogForm.author}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, author: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Read time
-                  <input
-                    type="text"
-                    value={blogForm.read}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, read: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Excerpt
-                  <textarea
-                    rows={3}
-                    value={blogForm.excerpt}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, excerpt: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Content
-                  <textarea
-                    rows={4}
-                    value={blogForm.content}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, content: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  Cover image file
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
-                  />
-                </label>
-                <label>
-                  Or cover image URL
-                  <input
-                    type="url"
-                    value={blogForm.imageUrl}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
-                  />
-                </label>
-                <label className="inline">
-                  <input
-                    type="checkbox"
-                    checked={blogForm.featured}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, featured: event.target.checked }))}
-                  />
-                  Mark as featured
-                </label>
-                <label className="inline">
-                  <input
-                    type="checkbox"
-                    checked={blogForm.published}
-                    onChange={(event) => setBlogForm((prev) => ({ ...prev, published: event.target.checked }))}
-                  />
-                  Publish immediately
-                </label>
-                <div className="admin-actions">
-                  <button type="submit">{editingBlogId ? 'Update blog' : 'Save blog'}</button>
-                  {editingBlogId && (
-                    <button type="button" className="ghost-btn" onClick={handleCancelEdit}>
-                      Cancel
-                    </button>
-                  )}
+                    </details>
+                  </section>
                 </div>
-              </form>
-              <div className="admin-list">
-                {blogItems.map((item) => {
-                  const itemId = item.id || item._id;
-                  return (
-                    <div className="admin-list-item" key={itemId}>
-                      <span>{item.title}</span>
-                      <div className="admin-actions">
-                        {item.featured && <span className="admin-badge">Featured</span>}
-                        {item.published === false && <span className="admin-badge">Draft</span>}
-                        <button type="button" className="ghost-btn" onClick={() => handleEditBlog(item)}>Edit</button>
-                        <button type="button" className="ghost-btn" onClick={() => handleDelete('blogs', itemId)}>Delete</button>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
-            </section>
+            )}
 
-            <section className="admin-card">
-              <h2>{editingVideoId ? 'Edit video' : 'Video gallery'}</h2>
-              <form className="admin-form" onSubmit={handleVideoSubmit}>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={videoForm.title}
-                    onChange={(event) => setVideoForm((prev) => ({ ...prev, title: event.target.value }))}
-                  />
-                </label>
-                <label>
-                  YouTube URL
-                  <input
-                    type="url"
-                    value={videoForm.url}
-                    onChange={(event) => setVideoForm((prev) => ({ ...prev, url: event.target.value }))}
-                    required
-                  />
-                </label>
-                <label className="inline">
-                  <input
-                    type="checkbox"
-                    checked={videoForm.published}
-                    onChange={(event) => setVideoForm((prev) => ({ ...prev, published: event.target.checked }))}
-                  />
-                  Publish immediately
-                </label>
-                <div className="admin-actions">
-                  <button type="submit">{editingVideoId ? 'Update video' : 'Add video'}</button>
-                  {editingVideoId && (
-                    <button type="button" className="ghost-btn" onClick={handleCancelVideoEdit}>
-                      Cancel
-                    </button>
-                  )}
+            {activeSection === 'news' && (
+              <div className="admin-section">
+                <div className="admin-section-header">
+                  <div>
+                    <h2>News coverage</h2>
+                    <p>Publish articles, press mentions, and updates.</p>
+                  </div>
+                  <div className="admin-section-meta">
+                    <span className="admin-pill">{newsItems.length} stories</span>
+                  </div>
                 </div>
-              </form>
-              <div className="admin-list">
-                {videoItems.map((item) => {
-                  const itemId = item.id || item._id;
-                  return (
-                    <div className="admin-list-item" key={itemId}>
-                      <div className="admin-item">
-                        <div>
-                          <div className="admin-item-title">{item.title || item.url}</div>
-                          {item.url && (
-                            <a className="admin-item-link" href={item.url} target="_blank" rel="noopener noreferrer">
-                              Open video
-                            </a>
+                <section className="admin-card">
+                  <div className="admin-card-header">
+                    <div>
+                      <h3>{editingNewsId ? 'Edit news coverage' : 'Add news coverage'}</h3>
+                      <p>Attach a link, date, and optional image.</p>
+                    </div>
+                    <span className="admin-pill">{newsItems.length} items</span>
+                  </div>
+                  <details
+                    className="admin-collapse"
+                    open={openPanels.newsForm}
+                    onToggle={handlePanelToggle('newsForm')}
+                  >
+                    <summary>{editingNewsId ? 'Update news entry' : 'Create a news entry'}</summary>
+                    <div className="admin-collapse-body">
+                      <form className="admin-form" onSubmit={handleNewsSubmit}>
+                        <label>
+                          Title
+                          <input
+                            type="text"
+                            value={newsForm.title}
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, title: event.target.value }))}
+                            required
+                          />
+                        </label>
+                        <label>
+                          Link
+                          <input
+                            type="url"
+                            value={newsForm.link}
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, link: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Date
+                          <input
+                            type="date"
+                            value={newsForm.date}
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, date: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Or image URL
+                          <input
+                            type="url"
+                            value={newsForm.imageUrl}
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Image file
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
+                          />
+                        </label>
+                        <label className="inline">
+                          <input
+                            type="checkbox"
+                            checked={newsForm.published}
+                            onChange={(event) => setNewsForm((prev) => ({ ...prev, published: event.target.checked }))}
+                          />
+                          Publish immediately
+                        </label>
+                        <div className="admin-actions">
+                          <button type="submit">{editingNewsId ? 'Update news' : 'Publish news'}</button>
+                          {editingNewsId && (
+                            <button type="button" className="ghost-btn" onClick={handleCancelNewsEdit}>
+                              Cancel
+                            </button>
                           )}
                         </div>
-                      </div>
-                      <div className="admin-actions">
-                        <button type="button" className="ghost-btn" onClick={() => handleEditVideo(item)}>Edit</button>
-                        <button type="button" className="ghost-btn" onClick={() => handleDelete('videos', itemId)}>Delete</button>
+                      </form>
+                    </div>
+                  </details>
+                  <details
+                    className="admin-collapse"
+                    open={openPanels.newsList}
+                    onToggle={handlePanelToggle('newsList')}
+                  >
+                    <summary>News items</summary>
+                    <div className="admin-collapse-body">
+                      <div className="admin-list">
+                        {newsItems.length === 0 ? (
+                          <div className="admin-empty">No news items yet.</div>
+                        ) : (
+                          newsItems.map((item) => {
+                            const itemId = item.id || item._id;
+                            const imageUrl = resolveMediaUrl(item.image || '');
+                            const dateLabel = item.publishedAt ? item.publishedAt.slice(0, 10) : '';
+                            return (
+                              <div className="admin-list-item" key={itemId}>
+                                <div className="admin-item">
+                                  {imageUrl && <img className="admin-thumb" src={imageUrl} alt={item.title} />}
+                                  <div>
+                                    <div className="admin-item-title">{item.title}</div>
+                                    <div className="admin-item-meta">{dateLabel}</div>
+                                    {item.link && item.link !== '#' && (
+                                      <a className="admin-item-link" href={item.link} target="_blank" rel="noopener noreferrer">
+                                        Open article
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="admin-actions">
+                                  <button type="button" className="ghost-btn" onClick={() => handleEditNews(item)}>Edit</button>
+                                  <button type="button" className="ghost-btn" onClick={() => handleDelete('news', itemId)}>Delete</button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
                       </div>
                     </div>
-                  );
-                })}
+                  </details>
+                </section>
               </div>
-            </section>
+            )}
+
+            {activeSection === 'blogs' && (
+              <div className="admin-section">
+                <div className="admin-section-header">
+                  <div>
+                    <h2>Blog posts</h2>
+                    <p>Write long-form updates and feature stories.</p>
+                  </div>
+                  <div className="admin-section-meta">
+                    <span className="admin-pill">{blogItems.length} posts</span>
+                  </div>
+                </div>
+                <section className="admin-card">
+                  <div className="admin-card-header">
+                    <div>
+                      <h3>{editingBlogId ? 'Edit blog post' : 'Create blog post'}</h3>
+                      <p>Draft, feature, and publish posts.</p>
+                    </div>
+                    <span className="admin-pill">{blogItems.length} items</span>
+                  </div>
+                  <details
+                    className="admin-collapse"
+                    open={openPanels.blogForm}
+                    onToggle={handlePanelToggle('blogForm')}
+                  >
+                    <summary>{editingBlogId ? 'Update blog content' : 'Write a new blog post'}</summary>
+                    <div className="admin-collapse-body">
+                      <form className="admin-form" onSubmit={handleBlogSubmit}>
+                        <label>
+                          Title
+                          <input
+                            type="text"
+                            value={blogForm.title}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, title: event.target.value }))}
+                            required
+                          />
+                        </label>
+                        <label>
+                          Author
+                          <input
+                            type="text"
+                            value={blogForm.author}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, author: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Read time
+                          <input
+                            type="text"
+                            value={blogForm.read}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, read: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Excerpt
+                          <textarea
+                            rows={3}
+                            value={blogForm.excerpt}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, excerpt: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Content
+                          <textarea
+                            rows={4}
+                            value={blogForm.content}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, content: event.target.value }))}
+                          />
+                        </label>
+                        <label>
+                          Cover image file
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, file: event.target.files?.[0] || null }))}
+                          />
+                        </label>
+                        <label>
+                          Or cover image URL
+                          <input
+                            type="url"
+                            value={blogForm.imageUrl}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, imageUrl: event.target.value }))}
+                          />
+                        </label>
+                        <label className="inline">
+                          <input
+                            type="checkbox"
+                            checked={blogForm.featured}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, featured: event.target.checked }))}
+                          />
+                          Mark as featured
+                        </label>
+                        <label className="inline">
+                          <input
+                            type="checkbox"
+                            checked={blogForm.published}
+                            onChange={(event) => setBlogForm((prev) => ({ ...prev, published: event.target.checked }))}
+                          />
+                          Publish immediately
+                        </label>
+                        <div className="admin-actions">
+                          <button type="submit">{editingBlogId ? 'Update blog' : 'Save blog'}</button>
+                          {editingBlogId && (
+                            <button type="button" className="ghost-btn" onClick={handleCancelEdit}>
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+                      </form>
+                    </div>
+                  </details>
+                  <details
+                    className="admin-collapse"
+                    open={openPanels.blogList}
+                    onToggle={handlePanelToggle('blogList')}
+                  >
+                    <summary>Published and draft posts</summary>
+                    <div className="admin-collapse-body">
+                      <div className="admin-list">
+                        {blogItems.length === 0 ? (
+                          <div className="admin-empty">No blog posts yet.</div>
+                        ) : (
+                          blogItems.map((item) => {
+                            const itemId = item.id || item._id;
+                            return (
+                              <div className="admin-list-item" key={itemId}>
+                                <span>{item.title}</span>
+                                <div className="admin-actions">
+                                  {item.featured && <span className="admin-badge">Featured</span>}
+                                  {item.published === false && <span className="admin-badge">Draft</span>}
+                                  <button type="button" className="ghost-btn" onClick={() => handleEditBlog(item)}>Edit</button>
+                                  <button type="button" className="ghost-btn" onClick={() => handleDelete('blogs', itemId)}>Delete</button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
+                  </details>
+                </section>
+              </div>
+            )}
           </div>
         )}
       </div>
